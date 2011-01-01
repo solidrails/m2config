@@ -1,0 +1,14 @@
+GEM
+  remote: http://rubygems.org/
+  specs:
+    sqlite3-ruby (1.2.5)
+    test-spec (0.10.0)
+    thrift (0.5.0)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  sqlite3-ruby (~> 1.2.0)
+  test-spec
+  thrift
