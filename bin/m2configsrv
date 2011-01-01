@@ -9,4 +9,9 @@ rescue LoadError
 end
 require 'm2config/handler'
 
+if ARGV[0].nil?
+  $stderr.puts "Error: Please specify full path to Mongrel2 config.sqlite as first commandline argument."
+  exit
+end
+
 M2::launch_api_server ARGV[0]
