@@ -14,6 +14,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency "test-spec"
  
   s.files        = Dir.glob("lib/**") + Dir.glob("*.thrift")
-  s.executables  = ['bin/m2configsrv']
+  s.executables  = ['m2configsrv']
   s.require_path = 'lib'
 end
