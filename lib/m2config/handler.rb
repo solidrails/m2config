@@ -35,7 +35,8 @@ module M2
         route.reversed = false unless route.reversed
         route.validate
         
-        fields = {:path => route.path, :reversed => (route.reversed ? 1 : 0), :host_id => route.host_id, :target_id => route.target_id, :target_type => route.target_type}
+        fields = {:path => route.path, :reversed => (route.reversed ? 1 : 0), :host_id => route.host_id, :target_id => route.target_id,
+                  :target_type => M2::TargetType::VALUE_MAP[route.target_type].downcase}
         fields = route.additional_fields.merge(fields) if route.additional_fields
         @db.execute('INSERT INTO route (%s) VALUES (%s)' % [fields.keys.join(', '), (['?'] * fields.values.size).join(', ')], fields.values)
         @db.last_insert_row_id

@@ -94,7 +94,7 @@ describe "Handler" do
       @db.get_first_value("SELECT path FROM route WHERE id = ?", route_id).should == route.path
       @db.get_first_value("SELECT host_id FROM route WHERE id = ?", route_id).to_i.should == route.host_id
       @db.get_first_value("SELECT target_id FROM route WHERE id = ?", route_id).to_i.should == route.target_id
-      @db.get_first_value("SELECT target_type FROM route WHERE id = ?", route_id).to_i.should == route.target_type
+      @db.get_first_value("SELECT target_type FROM route WHERE id = ?", route_id).should == "handler"
       
       route_id2 = @handler.find_or_add_route route
       route_id2.should == route_id
