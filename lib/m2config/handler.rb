@@ -37,7 +37,12 @@ module M2
                                 :host_id => row.delete('host_id'), :target_id => row.delete('target_id'),
                                 :target_type => constantize("M2::TargetType::" + row.delete('target_type').upcase)
           row.reject! {|k,v| k.class == Fixnum || v.nil? }
-          route.additional_fields = row unless row.empty?
+          unless row.empty?
+            route.additional_fields = {}
+            row.each_pair do |k, v|
+              route.additional_fields[k] = v.to_s
+            end
+          end
           routes << route
         end
         return routes

@@ -87,7 +87,7 @@ describe "Handler" do
     it "should return routes" do
       route1 = M2::Route.new(:path => "/test", :host_id => @host_id, :target_id => 42, :target_type => M2::TargetType::HANDLER)
       route1.id = @handler.find_or_add_route route1
-      route2 = M2::Route.new(:path => "/blubb", :host_id => @host_id, :target_id => 23, :target_type => M2::TargetType::HANDLER, :additional_fields => {"solidrails_container_id" => 3})
+      route2 = M2::Route.new(:path => "/blubb", :host_id => @host_id, :target_id => 23, :target_type => M2::TargetType::HANDLER, :additional_fields => {"solidrails_container_id" => "3"})
       route2.id = @handler.find_or_add_route route2
       @handler.find_or_add_route M2::Route.new(:path => "/blubb", :host_id => 8888, :target_id => 23, :target_type => M2::TargetType::HANDLER)
       
@@ -95,6 +95,13 @@ describe "Handler" do
       routes[0].should == route1
       routes[1].should == route2
       routes[2].should.be.nil
+    end
+    
+    it "should return additional field values as strings" do
+      @handler.find_or_add_route M2::Route.new(:path => "/blubb", :host_id => @host_id, :target_id => 23, :target_type => M2::TargetType::HANDLER,
+                                               :additional_fields => {:solidrails_container_id => 3})
+      routes = @handler.find_routes_for_host @host_id
+      routes[0].additional_fields.should == {"solidrails_container_id" => "3"}
     end
     
     it "should return no routes if host has none" do
