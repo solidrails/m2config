@@ -41,6 +41,21 @@ require 'm2config/types'
             return
           end
 
+          def find_routes_for_host(host_id)
+            send_find_routes_for_host(host_id)
+            return recv_find_routes_for_host()
+          end
+
+          def send_find_routes_for_host(host_id)
+            send_message('find_routes_for_host', Find_routes_for_host_args, :host_id => host_id)
+          end
+
+          def recv_find_routes_for_host()
+            result = receive_message(Find_routes_for_host_result)
+            return result.success unless result.success.nil?
+            raise ::Thrift::ApplicationException.new(::Thrift::ApplicationException::MISSING_RESULT, 'find_routes_for_host failed: unknown result')
+          end
+
           def find_or_add_route(route)
             send_find_or_add_route(route)
             return recv_find_or_add_route()
@@ -87,6 +102,13 @@ require 'm2config/types'
             result = Remove_host_result.new()
             @handler.remove_host(args.host_id)
             write_result(result, oprot, 'remove_host', seqid)
+          end
+
+          def process_find_routes_for_host(seqid, iprot, oprot)
+            args = read_args(iprot, Find_routes_for_host_args)
+            result = Find_routes_for_host_result.new()
+            result.success = @handler.find_routes_for_host(args.host_id)
+            write_result(result, oprot, 'find_routes_for_host', seqid)
           end
 
           def process_find_or_add_route(seqid, iprot, oprot)
@@ -162,6 +184,39 @@ require 'm2config/types'
 
           FIELDS = {
 
+          }
+
+          def struct_fields; FIELDS; end
+
+          def validate
+          end
+
+          ::Thrift::Struct.generate_accessors self
+        end
+
+        class Find_routes_for_host_args
+          include ::Thrift::Struct, ::Thrift::Struct_Union
+          HOST_ID = 1
+
+          FIELDS = {
+            HOST_ID => {:type => ::Thrift::Types::I32, :name => 'host_id'}
+          }
+
+          def struct_fields; FIELDS; end
+
+          def validate
+            raise ::Thrift::ProtocolException.new(::Thrift::ProtocolException::UNKNOWN, 'Required field host_id is unset!') unless @host_id
+          end
+
+          ::Thrift::Struct.generate_accessors self
+        end
+
+        class Find_routes_for_host_result
+          include ::Thrift::Struct, ::Thrift::Struct_Union
+          SUCCESS = 0
+
+          FIELDS = {
+            SUCCESS => {:type => ::Thrift::Types::LIST, :name => 'success', :element => {:type => ::Thrift::Types::STRUCT, :class => M2::Route}}
           }
 
           def struct_fields; FIELDS; end

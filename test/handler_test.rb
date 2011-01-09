@@ -79,6 +79,33 @@ describe "Handler" do
     end
   end
   
+  describe "finding all routes for of a host" do
+    setup do
+      @host_id = @handler.find_or_add_host(M2::Host.new(:matching => "*.fittl.com"))
+    end
+    
+    it "should return routes" do
+      route1 = M2::Route.new(:path => "/test", :host_id => @host_id, :target_id => 42, :target_type => M2::TargetType::HANDLER)
+      route1.id = @handler.find_or_add_route route1
+      route2 = M2::Route.new(:path => "/blubb", :host_id => @host_id, :target_id => 23, :target_type => M2::TargetType::HANDLER, :additional_fields => {"solidrails_container_id" => 3})
+      route2.id = @handler.find_or_add_route route2
+      @handler.find_or_add_route M2::Route.new(:path => "/blubb", :host_id => 8888, :target_id => 23, :target_type => M2::TargetType::HANDLER)
+      
+      routes = @handler.find_routes_for_host @host_id
+      routes[0].should == route1
+      routes[1].should == route2
+      routes[2].should.be.nil
+    end
+    
+    it "should return no routes if host has none" do
+      @handler.find_routes_for_host(@host_id).empty?.should == true
+    end
+    
+    it "should return no routes if host doesn't exist" do
+      @handler.find_routes_for_host(8888).empty?.should == true
+    end
+  end
+  
   describe "adding/finding a route" do
     setup do
       @host_id = @handler.find_or_add_host(M2::Host.new(:matching => "*.fittl.com"))

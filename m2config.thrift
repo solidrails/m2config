@@ -38,6 +38,11 @@ service Config {
   void remove_host(1: required i32 host_id);
   
   /**
+    Returns list of all routes for the specified host_id.
+  */
+  list<Route> find_routes_for_host(1: required i32 host_id);
+  
+  /**
     Returns the ID of an existing route, or adds it if it doesn't exist yet.
     
     @returns Internal ID of the route.
